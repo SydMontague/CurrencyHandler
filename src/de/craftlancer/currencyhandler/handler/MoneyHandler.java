@@ -36,7 +36,7 @@ public class MoneyHandler implements Handler<Number>
     }
     
     @Override
-    public boolean checkInputClass(Object obj)
+    public boolean checkInputObject(Object obj)
     {
         return obj instanceof Number;
     }

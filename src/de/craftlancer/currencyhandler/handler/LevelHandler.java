@@ -32,7 +32,7 @@ public class LevelHandler implements Handler<Integer>
     }
     
     @Override
-    public boolean checkInputClass(Object obj)
+    public boolean checkInputObject(Object obj)
     {
         return (obj instanceof Integer);
     }

@@ -1,15 +1,12 @@
 package de.craftlancer.currencyhandler;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -75,25 +72,25 @@ public class CurrencyHandler extends JavaPlugin
         return true;
     }
     
+    /**
+     * Get a registered Handler with a given key.
+     * 
+     * @param key the key of the handler
+     * @return the Handler object with the given key, null if there is no registered handler for this key
+     */
     public static Handler getHandler(String key)
     {
         return handlerList.get(key);
     }
     
+    /**
+     * Check if a handler with given key is registered.
+     * 
+     * @param key the key of the handler
+     * @return true if a handler is found, false if there is no registered handler
+     */
     public static boolean hasHandler(String key)
     {
         return handlerList.containsKey(key);
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static boolean hasCurrency(Player p, Map<String, Object> s)
-    {
-        for (Entry<String, Object> set : s.entrySet())
-            if (hasHandler(set.getKey()))
-                if (getHandler(set.getKey()).checkInputClass(set.getValue()))
-                    if (!getHandler(set.getKey()).hasCurrency(p, set.getValue()))
-                        return false;
-        
-        return true;
     }
 }

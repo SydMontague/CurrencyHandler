@@ -7,6 +7,7 @@ public interface Handler<T>
     /**
      * Check if a player owns enough of the handled currency
      * Called in need checks
+     * Check checkInputObject() before!
      * 
      * @param p
      *            the checked player
@@ -21,6 +22,7 @@ public interface Handler<T>
      * Withdraw an amount of the handled currency from a player
      * Called when buying or renting a skill
      * This function will only called when hasCurrency(p, amount) returns true
+     * Check checkInputObject() before!
      * 
      * @param p
      *            the checked player
@@ -36,7 +38,21 @@ public interface Handler<T>
      */
     public abstract String getCurrencyName();
     
-    public abstract boolean checkInputClass(Object obj);
+    /**
+     * Check if the given Object is usable by this handler.
+     * It's advised to check this method before interacting with the handler.
+     * 
+     * @param obj the object that needs to be checked
+     * @return true if the object can be used by this handler, false if not
+     */
+    public abstract boolean checkInputObject(Object obj);
     
+    /**
+     * Get a string, which describes the given object
+     * Check checkInputObject() before!
+     * 
+     * @param value the object that needs to be formated
+     * @return the String, after the handler's format
+     */
     public abstract String getFormatedString(Object value);
 }

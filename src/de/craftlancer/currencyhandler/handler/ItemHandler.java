@@ -36,7 +36,7 @@ public class ItemHandler implements Handler<List<?>>
     }
     
     @Override
-    public boolean checkInputClass(Object obj)
+    public boolean checkInputObject(Object obj)
     {
         if (!(obj instanceof List<?>))
             return false;
