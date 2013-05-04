@@ -1,0 +1,6 @@
+name: CurrencyHandler
+main: de.craftlancer.currencyhandler.CurrencyHandler
+version: RC1
+author: SydMontague
+description: Register custom currencys, which can be used in every supported plugin
+softdepend: [Vault]
