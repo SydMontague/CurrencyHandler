@@ -30,6 +30,13 @@ public class ItemHandler implements Handler<List<?>>
     }
     
     @Override
+    public void giveCurrency(Player p, List<?> amount)
+    {
+        for(Object s : amount)
+            p.getInventory().addItem(getItemStack(s.toString()));        
+    }
+    
+    @Override
     public String getCurrencyName()
     {
         return name;

@@ -26,6 +26,12 @@ public class ExperienceHandler implements Handler<Integer>
     }
     
     @Override
+    public void giveCurrency(Player p, Integer amount)
+    {
+        p.setTotalExperience(p.getTotalExperience() + amount);        
+    }
+    
+    @Override
     public String getCurrencyName()
     {
         return name;

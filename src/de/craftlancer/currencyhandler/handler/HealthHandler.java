@@ -26,6 +26,12 @@ public class HealthHandler implements Handler<Integer>
     }
     
     @Override
+    public void giveCurrency(Player p, Integer amount)
+    {
+        p.setHealth(p.getHealth() + amount);
+    }
+    
+    @Override
     public String getCurrencyName()
     {
         return name;

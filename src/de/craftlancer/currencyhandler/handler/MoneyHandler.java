@@ -30,6 +30,12 @@ public class MoneyHandler implements Handler<Number>
     }
     
     @Override
+    public void giveCurrency(Player p, Number amount)
+    {
+        economy.depositPlayer(p.getName(), amount.doubleValue());
+    }
+    
+    @Override
     public String getCurrencyName()
     {
         return currency;

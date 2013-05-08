@@ -26,6 +26,12 @@ public class LevelHandler implements Handler<Integer>
     }
     
     @Override
+    public void giveCurrency(Player p, Integer amount)
+    {
+        p.setLevel(p.getLevel() + amount);        
+    }
+    
+    @Override
     public String getCurrencyName()
     {
         return name;

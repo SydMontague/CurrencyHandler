@@ -26,6 +26,12 @@ public class FoodHandler implements Handler<Integer>
     }
     
     @Override
+    public void giveCurrency(Player p, Integer amount)
+    {
+        p.setFoodLevel(p.getFoodLevel() + amount);     
+    }
+    
+    @Override
     public String getCurrencyName()
     {
         return name;
@@ -42,5 +48,4 @@ public class FoodHandler implements Handler<Integer>
     {
         return value.toString() + " " + getCurrencyName();
     }
-    
 }
