@@ -45,8 +45,6 @@ public class CurrencyHandler extends JavaPlugin
             registerCurrency("health", new HealthHandler(config.getString("health.name", "Health")));
         if (config.getBoolean("level.activate", true))
             registerCurrency("level", new LevelHandler(config.getString("level.name", "Level")));
-        if (config.getBoolean("xp.activate", true))
-            registerCurrency("xp", new LevelHandler(config.getString("xp.name", "XP")));
     }
     
     /**
@@ -76,7 +74,8 @@ public class CurrencyHandler extends JavaPlugin
      * Get a registered Handler with a given key.
      * 
      * @param key the key of the handler
-     * @return the Handler object with the given key, null if there is no registered handler for this key
+     * @return the Handler object with the given key, null if there is no
+     *         registered handler for this key
      */
     public static Handler getHandler(String key)
     {
@@ -87,7 +86,8 @@ public class CurrencyHandler extends JavaPlugin
      * Check if a handler with given key is registered.
      * 
      * @param key the key of the handler
-     * @return true if a handler is found, false if there is no registered handler
+     * @return true if a handler is found, false if there is no registered
+     *         handler
      */
     public static boolean hasHandler(String key)
     {

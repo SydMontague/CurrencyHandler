@@ -27,7 +27,7 @@ public interface Handler<T>
      *            the amount of the handled currency
      */
     public abstract void withdrawCurrency(Player p, T amount);
-        
+    
     /**
      * Give an amount of the handled currency to a player
      * Check checkInputObject() before!

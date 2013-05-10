@@ -28,7 +28,7 @@ public class FoodHandler implements Handler<Integer>
     @Override
     public void giveCurrency(Player p, Integer amount)
     {
-        p.setFoodLevel(p.getFoodLevel() + amount);     
+        p.setFoodLevel(p.getFoodLevel() + amount);
     }
     
     @Override
