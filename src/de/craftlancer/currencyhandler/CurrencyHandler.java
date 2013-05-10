@@ -1,5 +1,6 @@
 package de.craftlancer.currencyhandler;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -27,14 +28,18 @@ public class CurrencyHandler extends JavaPlugin
     public void onEnable()
     {
         log = getLogger();
+        
+        if (!new File(getDataFolder().getPath() + File.separatorChar + "config.yml").exists())
+            saveDefaultConfig();
+        
         config = getConfig();
         
-        if (config.getBoolean("general.handler.economy.activate", true))
+        if (config.getBoolean("money.activate", true))
             if (getServer().getPluginManager().getPlugin("Vault") != null)
             {
                 RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
                 if (economyProvider != null)
-                    registerCurrency("money", new MoneyHandler(economyProvider.getProvider(), config.getString("general.handler.money.name", "Dollar")));
+                    registerCurrency("money", new MoneyHandler(economyProvider.getProvider(), config.getString("money.name", economyProvider.getProvider().currencyNamePlural())));
             }
         
         if (config.getBoolean("item.activate", true))
@@ -43,8 +48,8 @@ public class CurrencyHandler extends JavaPlugin
             registerCurrency("food", new FoodHandler(config.getString("food.name", "Food")));
         if (config.getBoolean("health.activate", true))
             registerCurrency("health", new HealthHandler(config.getString("health.name", "Health")));
-        if (config.getBoolean("level.activate", true))
-            registerCurrency("level", new LevelHandler(config.getString("level.name", "Level")));
+        if (config.getBoolean("enchantlevel.activate", true))
+            registerCurrency("enchantlevel", new LevelHandler(config.getString("enchantlevel.name", "Level")));
     }
     
     /**

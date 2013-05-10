@@ -36,6 +36,12 @@ public class MoneyHandler implements Handler<Number>
     }
     
     @Override
+    public String getFormatedString(Number value)
+    {
+        return value.toString() + " " + getCurrencyName();
+    }
+    
+    @Override
     public String getCurrencyName()
     {
         return currency;
@@ -45,11 +51,5 @@ public class MoneyHandler implements Handler<Number>
     public boolean checkInputObject(Object obj)
     {
         return obj instanceof Number;
-    }
-    
-    @Override
-    public String getFormatedString(Object value)
-    {
-        return ((Number) value).toString() + " " + getCurrencyName();
     }
 }

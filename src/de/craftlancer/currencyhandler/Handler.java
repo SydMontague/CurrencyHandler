@@ -8,10 +8,8 @@ public interface Handler<T>
      * Check if a player owns enough of the handled currency
      * Check checkInputObject() before!
      * 
-     * @param p
-     *            the checked player
-     * @param amount
-     *            the amount of the handled currency
+     * @param p the checked player
+     * @param amount the amount of the handled currency
      * @return true if the amount of the handled currency is greater or equal
      *         the amount
      */
@@ -21,10 +19,8 @@ public interface Handler<T>
      * Withdraw an amount of the handled currency from a player
      * Check checkInputObject() before!
      * 
-     * @param p
-     *            the checked player
-     * @param amount
-     *            the amount of the handled currency
+     * @param p the checked player
+     * @param amount the amount of the handled currency
      */
     public abstract void withdrawCurrency(Player p, T amount);
     
@@ -32,12 +28,19 @@ public interface Handler<T>
      * Give an amount of the handled currency to a player
      * Check checkInputObject() before!
      * 
-     * @param p
-     *            the checked player
-     * @param amount
-     *            the amount of the handled currency
+     * @param p the checked player
+     * @param amount the amount of the handled currency
      */
     public abstract void giveCurrency(Player p, T amount);
+    
+    /**
+     * Get a string, which describes the given object
+     * Check checkInputObject() before!
+     * 
+     * @param value the object that needs to be formated
+     * @return the String, after the handler's format
+     */
+    public abstract String getFormatedString(T value);
     
     /**
      * Get the name of the currency.
@@ -54,14 +57,4 @@ public interface Handler<T>
      * @return true if the object can be used by this handler, false if not
      */
     public abstract boolean checkInputObject(Object obj);
-    
-    /**
-     * Get a string, which describes the given object
-     * Check checkInputObject() before!
-     * 
-     * @param value the object that needs to be formated
-     * @return the String, after the handler's format
-     */
-    public abstract String getFormatedString(Object value);
-    
 }

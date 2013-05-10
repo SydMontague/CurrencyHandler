@@ -32,6 +32,12 @@ public class LevelHandler implements Handler<Integer>
     }
     
     @Override
+    public String getFormatedString(Integer value)
+    {
+        return value.toString() + " " + getCurrencyName();
+    }
+    
+    @Override
     public String getCurrencyName()
     {
         return name;
@@ -41,11 +47,5 @@ public class LevelHandler implements Handler<Integer>
     public boolean checkInputObject(Object obj)
     {
         return (obj instanceof Integer);
-    }
-    
-    @Override
-    public String getFormatedString(Object value)
-    {
-        return value.toString() + " " + getCurrencyName();
     }
 }

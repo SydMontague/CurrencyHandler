@@ -1,0 +1,13 @@
+money:
+    activate: true
+item:
+    activate: true
+food:    
+    activate: true
+    name: Food
+health:
+    activate: true
+    name: Food
+enchantlevel:
+    activate: true
+    name: Enchantmentlevel

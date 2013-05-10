@@ -37,6 +37,17 @@ public class ItemHandler implements Handler<List<?>>
     }
     
     @Override
+    public String getFormatedString(List<?> value)
+    {
+        String output = "";
+        
+        for (Object s : value)
+            output += getItemString(s.toString()) + " ";
+        
+        return output;
+    }
+    
+    @Override
     public String getCurrencyName()
     {
         return name;
@@ -54,18 +65,7 @@ public class ItemHandler implements Handler<List<?>>
         
         return true;
     }
-    
-    @Override
-    public String getFormatedString(Object value)
-    {
-        String output = "";
         
-        for (Object s : (List<?>) value)
-            output += getItemString(s.toString()) + " ";
-        
-        return output;
-    }
-    
     private static String getItemString(String str)
     {
         int id;
