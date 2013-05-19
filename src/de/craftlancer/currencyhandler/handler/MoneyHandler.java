@@ -36,6 +36,16 @@ public class MoneyHandler implements Handler<Number>
     }
     
     @Override
+    public void setCurrency(Player p, Number amount)
+    {
+        double diff = amount.doubleValue() - economy.getBalance(p.getName());
+        if (diff < 0)
+            economy.withdrawPlayer(p.getName(), amount.doubleValue());
+        else
+            economy.depositPlayer(p.getName(), amount.doubleValue());
+    }
+    
+    @Override
     public String getFormatedString(Number value)
     {
         return value.toString() + " " + getCurrencyName();

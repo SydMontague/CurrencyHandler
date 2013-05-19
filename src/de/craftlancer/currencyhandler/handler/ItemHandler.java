@@ -35,6 +35,12 @@ public class ItemHandler implements Handler<List<?>>
         for (Object s : amount)
             p.getInventory().addItem(getItemStack(s.toString()));
     }
+
+    @Override
+    public void setCurrency(Player p, List<?> amount)
+    {
+        throw new UnsupportedOperationException("ItemHandler does not support setCurrency()! Skipping the handler.");
+    }
     
     @Override
     public String getFormatedString(List<?> value)

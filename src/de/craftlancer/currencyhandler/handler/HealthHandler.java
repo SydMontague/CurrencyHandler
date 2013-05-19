@@ -30,6 +30,12 @@ public class HealthHandler implements Handler<Integer>
     {
         p.setHealth(p.getHealth() + amount);
     }
+
+    @Override
+    public void setCurrency(Player p, Integer amount)
+    {
+        p.setHealth(amount);
+    }
     
     @Override
     public String getFormatedString(Integer value)

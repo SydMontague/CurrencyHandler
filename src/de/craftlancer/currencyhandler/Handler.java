@@ -34,6 +34,15 @@ public interface Handler<T>
     public abstract void giveCurrency(Player p, T amount);
     
     /**
+     * Set the amount of the handled currency to a player
+     * Check checkInputObject() before!
+     * 
+     * @param p the checked player
+     * @param amount the amount of the handled currency
+     */
+    public abstract void setCurrency(Player p, T amount) throws UnsupportedOperationException;
+    
+    /**
      * Get a string, which describes the given object
      * Check checkInputObject() before!
      * 
