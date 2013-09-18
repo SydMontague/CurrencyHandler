@@ -1,6 +1,7 @@
 package de.craftlancer.currencyhandler;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -14,16 +15,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import de.craftlancer.currencyhandler.handler.FoodHandler;
 import de.craftlancer.currencyhandler.handler.HealthHandler;
 import de.craftlancer.currencyhandler.handler.ItemHandler;
 import de.craftlancer.currencyhandler.handler.LevelHandler;
 import de.craftlancer.currencyhandler.handler.MoneyHandler;
+import de.craftlancer.currencyhandler.metrics.Metrics;
+import de.craftlancer.currencyhandler.metrics.Metrics.Graph;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CurrencyHandler extends JavaPlugin
 {
+    private static CurrencyHandler instance;
     private FileConfiguration config;
     public static Logger log = Bukkit.getLogger();
     public static HashMap<String, Handler> handlerList = new HashMap<String, Handler>();
@@ -31,6 +36,7 @@ public class CurrencyHandler extends JavaPlugin
     @Override
     public void onEnable()
     {
+        instance = this;
         log = getLogger();
         
         if (!new File(getDataFolder().getPath() + File.separatorChar + "config.yml").exists())
@@ -54,6 +60,43 @@ public class CurrencyHandler extends JavaPlugin
             registerCurrency("health", new HealthHandler(config.getString("health.name", "Health")));
         if (config.getBoolean("enchantlevel.activate", true))
             registerCurrency("enchantlevel", new LevelHandler(config.getString("enchantlevel.name", "Level")));
+        
+        new BukkitRunnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Metrics metrics = new Metrics(getInstance());
+                    metrics.start();
+                    
+                    Graph currencies = metrics.createGraph("Currencies");
+                    for (String e : getHandlerList().keySet())
+                        currencies.addPlotter(new Metrics.Plotter(e)
+                        {
+                            @Override
+                            public int getValue()
+                            {
+                                return 1;
+                            }
+                        });
+                }
+                catch (IOException e)
+                {
+                }
+            }
+        }.runTaskLater(this, 5L);
+    }
+    
+    public static CurrencyHandler getInstance()
+    {
+        return instance;
+    }
+    
+    public HashMap<String, Handler> getHandlerList()
+    {
+        return handlerList;
     }
     
     /**
