@@ -83,7 +83,7 @@ public class ItemHandler implements Handler<List<?>>
         }
         
         String str = obj.toString();
-        int id;
+        String id;
         int data = -1;
         int amount;
         
@@ -91,15 +91,18 @@ public class ItemHandler implements Handler<List<?>>
         
         if (value[0].contains(":"))
         {
-            id = Integer.parseInt(value[0].split(":")[0]);
+            id = value[0].split(":")[0];
             data = Integer.parseInt(value[0].split(":")[1]);
         }
         else
-            id = Integer.parseInt(value[0]);
+            id = value[0];
         
+        @SuppressWarnings("deprecation")
+        Material mat = Material.getMaterial(id) != null ? Material.getMaterial(id) : Material.getMaterial(Integer.parseInt(id));
+                
         amount = Integer.parseInt(value[1]);
         
-        return amount + " " + Material.getMaterial(id).name() + (data >= 0 ? ":" + data : "");
+        return amount + " " + mat.name() + (data >= 0 ? ":" + data : "");
     }
     
     private static ItemStack getItemStack(Object obj)
@@ -108,7 +111,7 @@ public class ItemHandler implements Handler<List<?>>
             return (ItemStack) obj;
         
         String str = obj.toString();
-        int id;
+        String id;
         short data = -1;
         int amount;
         
@@ -116,15 +119,18 @@ public class ItemHandler implements Handler<List<?>>
         
         if (value[0].contains(":"))
         {
-            id = Integer.parseInt(value[0].split(":")[0]);
+            id = value[0].split(":")[0];
             data = Short.parseShort(value[0].split(":")[1]);
         }
         else
-            id = Integer.parseInt(value[0]);
+            id = value[0];
         
         amount = Integer.parseInt(value[1]);
         
-        return data == -1 ? new ItemStack(id, amount) : new ItemStack(id, amount, data);
+        @SuppressWarnings("deprecation")
+        Material mat = Material.getMaterial(id) != null ? Material.getMaterial(id) : Material.getMaterial(Integer.parseInt(id));
+        
+        return data == -1 ? new ItemStack(mat, amount) : new ItemStack(mat, amount, data);
     }
     
     private static boolean isItemStack(Object obj)
