@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import de.craftlancer.currencyhandler.Handler;
 
-public class HealthHandler implements Handler<Integer>
+public class HealthHandler implements Handler<Number>
 {
     String name = "Health";
     
@@ -14,31 +14,31 @@ public class HealthHandler implements Handler<Integer>
     }
     
     @Override
-    public boolean hasCurrency(Player p, Integer amount)
+    public boolean hasCurrency(Player p, Number amount)
     {
-        return p.getHealth() >= amount;
+        return p.getHealth() >= amount.doubleValue();
     }
     
     @Override
-    public void withdrawCurrency(Player p, Integer amount)
+    public void withdrawCurrency(Player p, Number amount)
     {
-        p.setHealth(p.getHealth() - amount);
+        p.setHealth(p.getHealth() - amount.doubleValue());
     }
     
     @Override
-    public void giveCurrency(Player p, Integer amount)
+    public void giveCurrency(Player p, Number amount)
     {
-        p.setHealth(p.getHealth() + amount);
+        p.setHealth(p.getHealth() + amount.doubleValue());
     }
 
     @Override
-    public void setCurrency(Player p, Integer amount)
+    public void setCurrency(Player p, Number amount)
     {
-        p.setHealth(amount);
+        p.setHealth(amount.doubleValue());
     }
     
     @Override
-    public String getFormatedString(Integer value)
+    public String getFormatedString(Number value)
     {
         return value.toString() + " " + getCurrencyName();
     }
@@ -52,6 +52,6 @@ public class HealthHandler implements Handler<Integer>
     @Override
     public boolean checkInputObject(Object obj)
     {
-        return (obj instanceof Integer);
+        return (obj instanceof Number);
     }
 }

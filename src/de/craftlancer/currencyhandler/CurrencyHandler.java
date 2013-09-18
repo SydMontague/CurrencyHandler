@@ -2,12 +2,16 @@ package de.craftlancer.currencyhandler;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,7 +21,7 @@ import de.craftlancer.currencyhandler.handler.ItemHandler;
 import de.craftlancer.currencyhandler.handler.LevelHandler;
 import de.craftlancer.currencyhandler.handler.MoneyHandler;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class CurrencyHandler extends JavaPlugin
 {
     private FileConfiguration config;
@@ -97,5 +101,52 @@ public class CurrencyHandler extends JavaPlugin
     public static boolean hasHandler(String key)
     {
         return handlerList.containsKey(key);
+    }
+    
+    /**
+     * Withdraw all given currencies from the player
+     * Uses the CurrencyHandler plugin
+     * 
+     * @param p the player
+     * @param input the currencies
+     */
+    public static void withdrawCurrencies(Player p, Set<Entry<String, Object>> input)
+    {
+        for (Entry<String, Object> set : input)
+            if (hasHandler(set.getKey()))
+                if (getHandler(set.getKey()).checkInputObject(set.getValue()))
+                    getHandler(set.getKey()).withdrawCurrency(p, set.getValue());
+    }
+    
+    /**
+     * Give all given currencies to the player
+     * 
+     * @param p the player
+     * @param input the currencies
+     */
+    public static void giveCurrencies(Player p, Set<Entry<String, Object>> input)
+    {
+        for (Entry<String, Object> set : input)
+            if (hasHandler(set.getKey()))
+                if (getHandler(set.getKey()).checkInputObject(set.getValue()))
+                    getHandler(set.getKey()).giveCurrency(p, set.getValue());
+    }
+    
+    /**
+     * Check if a player has enough currencies
+     * 
+     * @param p the player
+     * @param s the currencies
+     * @return true if the player has the currencyies, false if not
+     */
+    public static boolean hasCurrencies(Player p, Map<String, Object> s)
+    {
+        for (Entry<String, Object> set : s.entrySet())
+            if (hasHandler(set.getKey()))
+                if (getHandler(set.getKey()).checkInputObject(set.getValue()))
+                    if (!getHandler(set.getKey()).hasCurrency(p, set.getValue()))
+                        return false;
+        
+        return true;
     }
 }
