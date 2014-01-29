@@ -3,7 +3,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.craftlancer</groupId>
   <artifactId>currencyhandler</artifactId>
-  <version>1.0-SNAPSHOT</version>
   <name>CurrencyHandler</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -49,4 +48,5 @@
       </plugin>
     </plugins>
   </build>
+  <version>1.0.0-RC2</version>
 </project>
