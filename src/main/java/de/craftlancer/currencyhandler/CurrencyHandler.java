@@ -22,8 +22,8 @@ import de.craftlancer.currencyhandler.handler.HealthHandler;
 import de.craftlancer.currencyhandler.handler.ItemHandler;
 import de.craftlancer.currencyhandler.handler.LevelHandler;
 import de.craftlancer.currencyhandler.handler.MoneyHandler;
-import de.craftlancer.currencyhandler.metrics.Metrics;
-import de.craftlancer.currencyhandler.metrics.Metrics.Graph;
+import org.mcstats.Metrics;
+import org.mcstats.Metrics.Graph;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CurrencyHandler extends JavaPlugin
