@@ -1,12 +1,12 @@
 package de.craftlancer.currencyhandler.handler;
 
-import org.bukkit.entity.Player;
+import org.bukkit.entity.LivingEntity;
 
 import de.craftlancer.currencyhandler.Handler;
 
-public class HealthHandler implements Handler<Number>
+public class HealthHandler implements Handler<LivingEntity, Number>
 {
-    String name = "Health";
+    private String name = "Health";
     
     public HealthHandler(String name)
     {
@@ -14,27 +14,27 @@ public class HealthHandler implements Handler<Number>
     }
     
     @Override
-    public boolean hasCurrency(Player p, Number amount)
+    public boolean hasCurrency(LivingEntity holder, Number amount)
     {
-        return p.getHealth() >= amount.doubleValue();
+        return holder.getHealth() >= amount.doubleValue();
     }
     
     @Override
-    public void withdrawCurrency(Player p, Number amount)
+    public void withdrawCurrency(LivingEntity holder, Number amount)
     {
-        p.setHealth(p.getHealth() - amount.doubleValue());
+        holder.setHealth(holder.getHealth() - amount.doubleValue());
     }
     
     @Override
-    public void giveCurrency(Player p, Number amount)
+    public void giveCurrency(LivingEntity holder, Number amount)
     {
-        p.setHealth(p.getHealth() + amount.doubleValue());
+        holder.setHealth(holder.getHealth() + amount.doubleValue());
     }
 
     @Override
-    public void setCurrency(Player p, Number amount)
+    public void setCurrency(LivingEntity holder, Number amount)
     {
-        p.setHealth(amount.doubleValue());
+        holder.setHealth(amount.doubleValue());
     }
     
     @Override
@@ -52,6 +52,12 @@ public class HealthHandler implements Handler<Number>
     @Override
     public boolean checkInputObject(Object obj)
     {
-        return (obj instanceof Number);
+        return obj instanceof Number;
+    }
+    
+    @Override
+    public boolean checkInputHolder(Object obj)
+    {
+        return obj instanceof LivingEntity;
     }
 }

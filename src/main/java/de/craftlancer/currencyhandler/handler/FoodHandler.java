@@ -4,9 +4,9 @@ import org.bukkit.entity.Player;
 
 import de.craftlancer.currencyhandler.Handler;
 
-public class FoodHandler implements Handler<Number>
+public class FoodHandler implements Handler<Player, Number>
 {
-    String name = "Food";
+    private String name = "Food";
     
     public FoodHandler(String name)
     {
@@ -14,27 +14,27 @@ public class FoodHandler implements Handler<Number>
     }
     
     @Override
-    public boolean hasCurrency(Player p, Number amount)
+    public boolean hasCurrency(Player holder, Number amount)
     {
-        return p.getFoodLevel() >= amount.intValue();
+        return holder.getFoodLevel() >= amount.intValue();
     }
     
     @Override
-    public void withdrawCurrency(Player p, Number amount)
+    public void withdrawCurrency(Player holder, Number amount)
     {
-        p.setFoodLevel(p.getFoodLevel() - amount.intValue());
+        holder.setFoodLevel(holder.getFoodLevel() - amount.intValue());
     }
     
     @Override
-    public void giveCurrency(Player p, Number amount)
+    public void giveCurrency(Player holder, Number amount)
     {
-        p.setFoodLevel(p.getFoodLevel() + amount.intValue());
+        holder.setFoodLevel(holder.getFoodLevel() + amount.intValue());
     }
     
     @Override
-    public void setCurrency(Player p, Number amount)
+    public void setCurrency(Player holder, Number amount)
     {
-        p.setFoodLevel(amount.intValue());
+        holder.setFoodLevel(amount.intValue());
     }
     
     @Override
@@ -52,6 +52,11 @@ public class FoodHandler implements Handler<Number>
     @Override
     public boolean checkInputObject(Object obj)
     {
-        return (obj instanceof Number);
+        return obj instanceof Number;
+    }
+    
+    public boolean checkInputHolder(Object obj)
+    {
+        return obj instanceof Player;
     }
 }

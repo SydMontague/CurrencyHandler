@@ -4,9 +4,9 @@ import org.bukkit.entity.Player;
 
 import de.craftlancer.currencyhandler.Handler;
 
-public class LevelHandler implements Handler<Integer>
+public class LevelHandler implements Handler<Player, Integer>
 {
-    String name = "Level";
+    private String name = "Level";
     
     public LevelHandler(String name)
     {
@@ -14,27 +14,27 @@ public class LevelHandler implements Handler<Integer>
     }
     
     @Override
-    public boolean hasCurrency(Player p, Integer amount)
+    public boolean hasCurrency(Player holder, Integer amount)
     {
-        return p.getLevel() >= amount;
+        return holder.getLevel() >= amount;
     }
     
     @Override
-    public void withdrawCurrency(Player p, Integer amount)
+    public void withdrawCurrency(Player holder, Integer amount)
     {
-        p.setLevel(p.getLevel() - amount);
+        holder.setLevel(holder.getLevel() - amount);
     }
     
     @Override
-    public void giveCurrency(Player p, Integer amount)
+    public void giveCurrency(Player holder, Integer amount)
     {
-        p.setLevel(p.getLevel() + amount);
+        holder.setLevel(holder.getLevel() + amount);
     }
     
     @Override
-    public void setCurrency(Player p, Integer amount)
+    public void setCurrency(Player holder, Integer amount)
     {
-        p.setLevel(amount);
+        holder.setLevel(amount);
     }
     
     @Override
@@ -52,6 +52,12 @@ public class LevelHandler implements Handler<Integer>
     @Override
     public boolean checkInputObject(Object obj)
     {
-        return (obj instanceof Integer);
+        return obj instanceof Integer;
+    }
+    
+    @Override
+    public boolean checkInputHolder(Object obj)
+    {
+        return obj instanceof Player;
     }
 }

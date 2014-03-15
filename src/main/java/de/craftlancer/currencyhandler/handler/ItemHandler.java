@@ -3,43 +3,48 @@ package de.craftlancer.currencyhandler.handler;
 import java.util.List;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import de.craftlancer.currencyhandler.Handler;
 
-public class ItemHandler implements Handler<List<?>>
+public class ItemHandler implements Handler<Object, List<?>>
 {
     private String name = "Item";
     
     @Override
-    public boolean hasCurrency(Player p, List<?> amount)
+    public boolean hasCurrency(Object p, List<?> amount)
     {
+        Inventory inventory = getInventory(p);
+        
         for (Object s : amount)
         {
             ItemStack item = getItemStack(s);
-            if (!p.getInventory().containsAtLeast(item, item.getAmount()))
+            if (!inventory.containsAtLeast(item, item.getAmount()))
                 return false;
         }
         return true;
     }
     
     @Override
-    public void withdrawCurrency(Player p, List<?> amount)
+    public void withdrawCurrency(Object p, List<?> amount)
     {
+        Inventory inventory = getInventory(p);
         for (Object s : amount)
-            p.getInventory().removeItem(getItemStack(s));
+            inventory.removeItem(getItemStack(s));
     }
     
     @Override
-    public void giveCurrency(Player p, List<?> amount)
+    public void giveCurrency(Object p, List<?> amount)
     {
+        Inventory inventory = getInventory(p);
         for (Object s : amount)
-            p.getInventory().addItem(getItemStack(s));
+            inventory.addItem(getItemStack(s));
     }
     
     @Override
-    public void setCurrency(Player p, List<?> amount)
+    public void setCurrency(Object p, List<?> amount)
     {
         throw new UnsupportedOperationException("ItemHandler does not support setCurrency()!");
     }
@@ -74,6 +79,21 @@ public class ItemHandler implements Handler<List<?>>
         return true;
     }
     
+    private Inventory getInventory(Object obj)
+    {
+        if(obj instanceof Inventory)
+            return (Inventory) obj;
+        if(obj instanceof InventoryHolder)
+            return ((InventoryHolder) obj).getInventory();
+        
+        return null;
+    }
+    
+    public boolean checkInputHolder(Object obj)
+    {
+        return getInventory(obj) != null;
+    }
+    
     private static String getItemString(Object obj)
     {
         if (obj instanceof ItemStack)
@@ -97,8 +117,7 @@ public class ItemHandler implements Handler<List<?>>
         else
             id = value[0];
         
-        @SuppressWarnings("deprecation")
-        Material mat = Material.getMaterial(id) != null ? Material.getMaterial(id) : Material.getMaterial(Integer.parseInt(id));
+        Material mat = Material.matchMaterial(id);
                 
         amount = Integer.parseInt(value[1]);
         
