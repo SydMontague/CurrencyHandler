@@ -22,6 +22,20 @@
       <url>http://repo.mcstats.org/content/repositories/public</url>
     </repository>
   </repositories>
+
+  <distributionManagement>
+    <repository>
+      <name>Craftlancer Releases</name>
+      <id>releases</id>
+      <url>http://repo.craftlancer.de/content/repositories/releases</url>
+    </repository>
+    <snapshotRepository>
+      <name>Craftlancer Snapshots</name>
+      <id>snapshots</id>
+      <url>http://repo.craftlancer.de/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.bukkit</groupId>
