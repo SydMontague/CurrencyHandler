@@ -55,6 +55,7 @@ public class FoodHandler implements Handler<Player, Number>
         return obj instanceof Number;
     }
     
+    @Override
     public boolean checkInputHolder(Object obj)
     {
         return obj instanceof Player;

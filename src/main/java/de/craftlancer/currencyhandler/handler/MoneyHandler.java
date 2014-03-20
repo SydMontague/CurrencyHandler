@@ -66,7 +66,7 @@ public class MoneyHandler implements Handler<Object, Number>
         return obj instanceof Number;
     }
     
-    private String getAccountName(Object obj)
+    private static String getAccountName(Object obj)
     {
         String name = obj.toString();
         
@@ -76,6 +76,7 @@ public class MoneyHandler implements Handler<Object, Number>
         return name;
     }
     
+    @Override
     public boolean checkInputHolder(Object obj)
     {
         return economy.hasAccount(getAccountName(obj));

@@ -79,7 +79,7 @@ public class ItemHandler implements Handler<Object, List<?>>
         return true;
     }
     
-    private Inventory getInventory(Object obj)
+    private static Inventory getInventory(Object obj)
     {
         if(obj instanceof Inventory)
             return (Inventory) obj;
@@ -89,6 +89,7 @@ public class ItemHandler implements Handler<Object, List<?>>
         return null;
     }
     
+    @Override
     public boolean checkInputHolder(Object obj)
     {
         return getInventory(obj) != null;
