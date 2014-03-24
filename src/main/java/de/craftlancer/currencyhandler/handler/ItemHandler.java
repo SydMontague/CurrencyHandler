@@ -14,13 +14,13 @@ public class ItemHandler implements Handler<Object, List<?>>
     private String name = "Item";
     
     @Override
-    public boolean hasCurrency(Object p, List<?> amount)
+    public boolean hasCurrency(Object holder, List<?> amount)
     {
-        Inventory inventory = getInventory(p);
+        Inventory inventory = getInventory(holder);
         
-        for (Object s : amount)
+        for (Object obj : amount)
         {
-            ItemStack item = getItemStack(s);
+            ItemStack item = getItemStack(obj);
             if (!inventory.containsAtLeast(item, item.getAmount()))
                 return false;
         }
@@ -28,23 +28,23 @@ public class ItemHandler implements Handler<Object, List<?>>
     }
     
     @Override
-    public void withdrawCurrency(Object p, List<?> amount)
+    public void withdrawCurrency(Object holder, List<?> amount)
     {
-        Inventory inventory = getInventory(p);
-        for (Object s : amount)
-            inventory.removeItem(getItemStack(s));
+        Inventory inventory = getInventory(holder);
+        for (Object obj : amount)
+            inventory.removeItem(getItemStack(obj));
     }
     
     @Override
-    public void giveCurrency(Object p, List<?> amount)
+    public void giveCurrency(Object holder, List<?> amount)
     {
-        Inventory inventory = getInventory(p);
-        for (Object s : amount)
-            inventory.addItem(getItemStack(s));
+        Inventory inventory = getInventory(holder);
+        for (Object obj : amount)
+            inventory.addItem(getItemStack(obj));
     }
     
     @Override
-    public void setCurrency(Object p, List<?> amount)
+    public void setCurrency(Object holder, List<?> amount)
     {
         throw new UnsupportedOperationException("ItemHandler does not support setCurrency()!");
     }
@@ -52,12 +52,15 @@ public class ItemHandler implements Handler<Object, List<?>>
     @Override
     public String getFormatedString(List<?> value)
     {
-        String output = "";
+        StringBuilder output = new StringBuilder();
         
-        for (Object s : value)
-            output += getItemString(s.toString()) + " ";
+        for (Object obj : value)
+            output.append(getItemString(obj)).append(" ");
         
-        return output;
+        if (output.length() > 0)
+            output.deleteCharAt(output.length() - 1);
+        
+        return output.toString();
     }
     
     @Override
@@ -72,8 +75,8 @@ public class ItemHandler implements Handler<Object, List<?>>
         if (!(obj instanceof List<?>))
             return false;
         
-        for (Object s : (List<?>) obj)
-            if (isItemStack(s))
+        for (Object element : (List<?>) obj)
+            if (isItemStack(element))
                 return false;
         
         return true;
@@ -81,9 +84,9 @@ public class ItemHandler implements Handler<Object, List<?>>
     
     private static Inventory getInventory(Object obj)
     {
-        if(obj instanceof Inventory)
+        if (obj instanceof Inventory)
             return (Inventory) obj;
-        if(obj instanceof InventoryHolder)
+        if (obj instanceof InventoryHolder)
             return ((InventoryHolder) obj).getInventory();
         
         return null;
@@ -100,7 +103,7 @@ public class ItemHandler implements Handler<Object, List<?>>
         if (obj instanceof ItemStack)
         {
             ItemStack item = (ItemStack) obj;
-            return item.getAmount() + " " + item.getType().name() + (item.getDurability() >= 0 ? ":" + item.getDurability() : "");
+            return item.getAmount() + " " + item.getType().name() + (item.getDurability() > 0 ? ":" + item.getDurability() : "");
         }
         
         String str = obj.toString();
@@ -119,10 +122,9 @@ public class ItemHandler implements Handler<Object, List<?>>
             id = value[0];
         
         Material mat = Material.matchMaterial(id);
-                
-        amount = Integer.parseInt(value[1]);
         
-        return amount + " " + mat.name() + (data >= 0 ? ":" + data : "");
+        amount = Integer.parseInt(value[1]);
+        return amount + " " + mat.name() + (data > 0 ? ":" + data : "");
     }
     
     private static ItemStack getItemStack(Object obj)
@@ -147,15 +149,13 @@ public class ItemHandler implements Handler<Object, List<?>>
         
         amount = Integer.parseInt(value[1]);
         
-        @SuppressWarnings("deprecation")
-        Material mat = Material.getMaterial(id) != null ? Material.getMaterial(id) : Material.getMaterial(Integer.parseInt(id));
-        
+        Material mat = Material.matchMaterial(id);
         return data == -1 ? new ItemStack(mat, amount) : new ItemStack(mat, amount, data);
     }
     
     private static boolean isItemStack(Object obj)
     {
-        if(obj instanceof ItemStack)
+        if (obj instanceof ItemStack)
             return true;
         
         String str = obj.toString();
