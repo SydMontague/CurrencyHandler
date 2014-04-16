@@ -4,7 +4,7 @@ import org.bukkit.entity.LivingEntity;
 
 import de.craftlancer.currencyhandler.Handler;
 
-public class HealthHandler implements Handler<LivingEntity, Number>
+public class HealthHandler implements Handler
 {
     private String name = "Health";
     
@@ -14,32 +14,61 @@ public class HealthHandler implements Handler<LivingEntity, Number>
     }
     
     @Override
-    public boolean hasCurrency(LivingEntity holder, Number amount)
+    public boolean hasCurrency(Object holder, Object amount)
     {
-        return holder.getHealth() >= amount.doubleValue();
+        if (!checkInputHolder(holder))
+            return false;
+        
+        if (!checkInputObject(amount))
+            return false;
+        
+        return ((LivingEntity) holder).getHealth() >= ((Number) amount).doubleValue();
     }
     
     @Override
-    public void withdrawCurrency(LivingEntity holder, Number amount)
+    public void withdrawCurrency(Object holder, Object amount)
     {
-        holder.setHealth(holder.getHealth() - amount.doubleValue());
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
+        
+        LivingEntity entity = (LivingEntity) holder;
+        entity.setHealth(entity.getHealth() - ((Number) amount).doubleValue());
     }
     
     @Override
-    public void giveCurrency(LivingEntity holder, Number amount)
+    public void giveCurrency(Object holder, Object amount)
     {
-        holder.setHealth(holder.getHealth() + amount.doubleValue());
-    }
-
-    @Override
-    public void setCurrency(LivingEntity holder, Number amount)
-    {
-        holder.setHealth(amount.doubleValue());
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
+        
+        LivingEntity entity = (LivingEntity) holder;
+        entity.setHealth(entity.getHealth() + ((Number) amount).doubleValue());
     }
     
     @Override
-    public String getFormatedString(Number value)
+    public void setCurrency(Object holder, Object amount)
     {
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
+        
+        ((LivingEntity) holder).setHealth(((Number) amount).doubleValue());
+    }
+    
+    @Override
+    public String getFormatedString(Object value)
+    {
+        if (!checkInputObject(value))
+            return "INVALID INPUT OBJECT";
+        
         return value.toString() + " " + getCurrencyName();
     }
     

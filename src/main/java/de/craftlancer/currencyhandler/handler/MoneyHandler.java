@@ -6,7 +6,7 @@ import org.bukkit.entity.HumanEntity;
 
 import de.craftlancer.currencyhandler.Handler;
 
-public class MoneyHandler implements Handler<Object, Number>
+public class MoneyHandler implements Handler
 {
     private Economy economy;
     private String currency;
@@ -18,38 +18,64 @@ public class MoneyHandler implements Handler<Object, Number>
     }
     
     @Override
-    public boolean hasCurrency(Object holder, Number amount)
+    public boolean hasCurrency(Object holder, Object amount)
     {
-        return economy.has(getAccountName(holder), amount.doubleValue());
+        if (!checkInputHolder(holder))
+            return false;
+        
+        if (!checkInputObject(amount))
+            return false;
+        
+        return economy.has(getAccountName(holder), ((Number) amount).doubleValue());
     }
     
     @Override
-    public void withdrawCurrency(Object holder, Number amount)
+    public void withdrawCurrency(Object holder, Object amount)
     {
-        economy.withdrawPlayer(getAccountName(holder), amount.doubleValue());
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
+        
+        economy.withdrawPlayer(getAccountName(holder), ((Number) amount).doubleValue());
     }
     
     @Override
-    public void giveCurrency(Object holder, Number amount)
+    public void giveCurrency(Object holder, Object amount)
     {
-        economy.depositPlayer(getAccountName(holder), amount.doubleValue());
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
+        economy.depositPlayer(getAccountName(holder), ((Number) amount).doubleValue());
     }
     
     @Override
-    public void setCurrency(Object holder, Number amount)
+    public void setCurrency(Object holder, Object amount)
     {
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
+        
         String name = getAccountName(holder);
         
-        double diff = amount.doubleValue() - economy.getBalance(name);
+        double diff = ((Number) amount).doubleValue() - economy.getBalance(name);
         if (diff < 0)
-            economy.withdrawPlayer(name, amount.doubleValue());
+            economy.withdrawPlayer(name, -diff);
         else
-            economy.depositPlayer(name, amount.doubleValue());
+            economy.depositPlayer(name, diff);
     }
     
     @Override
-    public String getFormatedString(Number value)
+    public String getFormatedString(Object value)
     {
+        if (!checkInputObject(value))
+            return "INVALID INPUT OBJECT";
+        
         return value.toString() + " " + getCurrencyName();
     }
     

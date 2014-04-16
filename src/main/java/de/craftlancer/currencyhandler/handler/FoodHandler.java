@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import de.craftlancer.currencyhandler.Handler;
 
-public class FoodHandler implements Handler<Player, Number>
+public class FoodHandler implements Handler
 {
     private String name = "Food";
     
@@ -14,32 +14,61 @@ public class FoodHandler implements Handler<Player, Number>
     }
     
     @Override
-    public boolean hasCurrency(Player holder, Number amount)
+    public boolean hasCurrency(Object holder, Object amount)
     {
-        return holder.getFoodLevel() >= amount.intValue();
+        if (!checkInputHolder(holder))
+            return false;
+        
+        if (!checkInputObject(amount))
+            return false;
+        
+        return ((Player) holder).getFoodLevel() >= ((Number) amount).intValue();
     }
     
     @Override
-    public void withdrawCurrency(Player holder, Number amount)
+    public void withdrawCurrency(Object holder, Object amount)
     {
-        holder.setFoodLevel(holder.getFoodLevel() - amount.intValue());
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
+        
+        Player player = (Player) holder;
+        player.setFoodLevel(player.getFoodLevel() - ((Number) amount).intValue());
     }
     
     @Override
-    public void giveCurrency(Player holder, Number amount)
+    public void giveCurrency(Object holder, Object amount)
     {
-        holder.setFoodLevel(holder.getFoodLevel() + amount.intValue());
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
+        
+        Player player = (Player) holder;
+        player.setFoodLevel(player.getFoodLevel() + ((Number) amount).intValue());
     }
     
     @Override
-    public void setCurrency(Player holder, Number amount)
+    public void setCurrency(Object holder, Object amount)
     {
-        holder.setFoodLevel(amount.intValue());
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
+        
+        ((Player) holder).setFoodLevel(((Number) amount).intValue());
     }
     
     @Override
-    public String getFormatedString(Number value)
+    public String getFormatedString(Object value)
     {
+        if (!checkInputObject(value))
+            return "INVALID INPUT PARAMETER!";
+        
         return value.toString() + " " + getCurrencyName();
     }
     

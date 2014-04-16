@@ -1,64 +1,53 @@
 package de.craftlancer.currencyhandler;
 
-public interface Handler<K, T>
+public interface Handler
 {
     /**
      * Check if a player owns enough of the handled currency
-     * Check checkInputObject() before!
      * 
-     * @param holder
-     *            the checked player
-     * @param amount
-     *            the amount of the handled currency
+     * @param holder the "owner" of the currency
+     * @param amount the amount of the handled currency
      * @return true if the amount of the handled currency is greater or equal
-     *         the amount
+     *         the amount, false if not or when one of the input parameters does not match the requirements of the Handler
      */
-    public abstract boolean hasCurrency(K holder, T amount);
+    public abstract boolean hasCurrency(Object holder, Object amount);
     
     /**
      * Withdraw an amount of the handled currency from a player
-     * Check checkInputObject() before!
+     * If one of the input parameter does not match the requirements, nothing will happen.
      * 
-     * @param holder
-     *            the checked player
-     * @param amount
-     *            the amount of the handled currency
+     * @param holder the "owner" of the currency
+     * @param amount the amount of the handled currency
      */
-    public abstract void withdrawCurrency(K holder, T amount);
+    public abstract void withdrawCurrency(Object holder, Object amount);
     
     /**
      * Give an amount of the handled currency to a player
-     * Check checkInputObject() before!
+     * If one of the input parameter does not match the requirements, nothing will happen.
      * 
-     * @param holder
-     *            the checked player
-     * @param amount
-     *            the amount of the handled currency
+     * @param holder the "owner" of the currency
+     * @param amount the amount of the handled currency
      */
-    public abstract void giveCurrency(K holder, T amount);
+    public abstract void giveCurrency(Object holder, Object amount);
     
     /**
      * Set the amount of the handled currency to a player
-     * Check checkInputObject() before!
+     * If one of the input parameter does not match the requirements, nothing will happen.
      * 
-     * @param holder
-     *            the checked player
-     * @param amount
-     *            the amount of the handled currency
-     * @throws UnsupportedOperationException
-     *             when a handler does not support this
+     * @param holder the "owner" of the currency
+     * @param amount the amount of the handled currency
+     * @throws UnsupportedOperationException when a handler does not support this
      */
-    public abstract void setCurrency(K holder, T amount) throws UnsupportedOperationException;
+    public abstract void setCurrency(Object holder, Object amount) throws UnsupportedOperationException;
     
     /**
      * Get a string, which describes the given object
-     * Check checkInputObject() before!
+     * If one of the input parameter does not match the requirements, nothing will happen.
      * 
-     * @param value
-     *            the object that needs to be formated
+     * @param value the object that needs to be formated
      * @return the String, after the handler's format
      */
-    public abstract String getFormatedString(T value);
+    public abstract String getFormatedString(Object value);
     
     /**
      * Get the name of the currency.
@@ -71,9 +60,8 @@ public interface Handler<K, T>
      * Check if the given Object is usable by this handler.
      * It's advised to check this method before interacting with the handler.
      * 
-     * @param obj
-     *            the object that needs to be checked
-     * @return true if the object can be used by this handler, false if not
+     * @param obj the object that needs to be checked
+     * @return true if the object can be used as amount by this handler, false if not
      */
     public abstract boolean checkInputObject(Object obj);
     
@@ -81,9 +69,8 @@ public interface Handler<K, T>
      * Check if the given Object is usable as holder by this handler.
      * It's advised to check this method before interacting with the handler.
      * 
-     * @param obj
-     *            the object that needs to be checked
-     * @return true if the object can be used by this handler, false if not
+     * @param obj the object that needs to be checked
+     * @return true if the object can be used as holder by this handler, false if not
      */
     public abstract boolean checkInputHolder(Object obj);
 }

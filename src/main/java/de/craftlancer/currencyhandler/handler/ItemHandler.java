@@ -9,16 +9,22 @@ import org.bukkit.inventory.ItemStack;
 
 import de.craftlancer.currencyhandler.Handler;
 
-public class ItemHandler implements Handler<Object, List<?>>
+public class ItemHandler implements Handler
 {
     private String name = "Item";
     
     @Override
-    public boolean hasCurrency(Object holder, List<?> amount)
+    public boolean hasCurrency(Object holder, Object amount)
     {
+        if (!checkInputHolder(holder))
+            return false;
+        
+        if (!checkInputObject(amount))
+            return false;
+        
         Inventory inventory = getInventory(holder);
         
-        for (Object obj : amount)
+        for (Object obj : (List<?>) amount)
         {
             ItemStack item = getItemStack(obj);
             if (!inventory.containsAtLeast(item, item.getAmount()))
@@ -28,33 +34,46 @@ public class ItemHandler implements Handler<Object, List<?>>
     }
     
     @Override
-    public void withdrawCurrency(Object holder, List<?> amount)
+    public void withdrawCurrency(Object holder, Object amount)
     {
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
         Inventory inventory = getInventory(holder);
-        for (Object obj : amount)
+        for (Object obj : (List<?>) amount)
             inventory.removeItem(getItemStack(obj));
     }
     
     @Override
-    public void giveCurrency(Object holder, List<?> amount)
+    public void giveCurrency(Object holder, Object amount)
     {
+        if (!checkInputHolder(holder))
+            return;
+        
+        if (!checkInputObject(amount))
+            return;
         Inventory inventory = getInventory(holder);
-        for (Object obj : amount)
+        for (Object obj : (List<?>) amount)
             inventory.addItem(getItemStack(obj));
     }
     
     @Override
-    public void setCurrency(Object holder, List<?> amount)
+    public void setCurrency(Object holder, Object amount)
     {
         throw new UnsupportedOperationException("ItemHandler does not support setCurrency()!");
     }
     
     @Override
-    public String getFormatedString(List<?> value)
+    public String getFormatedString(Object value)
     {
+        if (!checkInputObject(value))
+            return "INVALID INPUT OBJECT";
+        
         StringBuilder output = new StringBuilder();
         
-        for (Object obj : value)
+        for (Object obj : (List<?>) value)
             output.append(getItemString(obj)).append(" ");
         
         if (output.length() > 0)

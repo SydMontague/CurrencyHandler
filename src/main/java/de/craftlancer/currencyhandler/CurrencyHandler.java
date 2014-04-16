@@ -23,7 +23,6 @@ import de.craftlancer.currencyhandler.handler.ItemHandler;
 import de.craftlancer.currencyhandler.handler.LevelHandler;
 import de.craftlancer.currencyhandler.handler.MoneyHandler;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class CurrencyHandler extends JavaPlugin
 {
     private static CurrencyHandler instance;
@@ -100,10 +99,8 @@ public class CurrencyHandler extends JavaPlugin
     /**
      * Register a new currency to be used with this plugin
      * 
-     * @param key
-     *            the key, used in config for the "currency"
-     * @param handler
-     *            the handler object
+     * @param key the key, used in config for the "currency"
+     * @param handler the handler object
      * @return false when something went wrong, true otherwise
      */
     public static boolean registerCurrency(String key, Handler handler)
@@ -125,10 +122,8 @@ public class CurrencyHandler extends JavaPlugin
     /**
      * Get a registered Handler with a given key.
      * 
-     * @param key
-     *            the key of the handler
-     * @return the Handler object with the given key, null if there is no
-     *         registered handler for this key
+     * @param key the key of the handler
+     * @return the Handler object with the given key, null if there is no registered handler for this key
      */
     public static Handler getHandler(String key)
     {
@@ -138,10 +133,8 @@ public class CurrencyHandler extends JavaPlugin
     /**
      * Check if a handler with given key is registered.
      * 
-     * @param key
-     *            the key of the handler
-     * @return true if a handler is found, false if there is no registered
-     *         handler
+     * @param key the key of the handler
+     * @return true if a handler is found, false if there is no registered handler
      */
     public static boolean hasHandler(String key)
     {
@@ -152,62 +145,59 @@ public class CurrencyHandler extends JavaPlugin
      * Withdraw all given currencies from the holder.
      * If a currency is not compatible with the provided holder type, it will be ignored!
      * 
-     * @param holder
-     *            the player
-     * @param input
-     *            the currencies
+     * @param holder the holder of the currencies
+     * @param input the currencies
      */
-    public static <T> void withdrawCurrencies(T holder, Map<String, Object> input)
+    public static void withdrawCurrencies(Object holder, Map<String, Object> input)
     {
         for (Entry<String, Object> set : input.entrySet())
             if (hasHandler(set.getKey()))
-                if (getHandler(set.getKey()).checkInputObject(set.getValue()) && getHandler(set.getKey()).checkInputHolder(holder))
-                    getHandler(set.getKey()).withdrawCurrency(holder, set.getValue());
+                getHandler(set.getKey()).withdrawCurrency(holder, set.getValue());
     }
     
     /**
      * Give all given currencies to the holder.
      * If a currency is not compatible with the provided holder type, it will be ignored!
      * 
-     * @param holder
-     *            the player
-     * @param input
-     *            the currencies
+     * @param holder the holder of the currencies
+     * @param input the currencies
      */
-    public static <T> void giveCurrencies(T holder, Map<String, Object> input)
+    public static void giveCurrencies(Object holder, Map<String, Object> input)
     {
         for (Entry<String, Object> set : input.entrySet())
             if (hasHandler(set.getKey()))
-                if (getHandler(set.getKey()).checkInputObject(set.getValue()) && getHandler(set.getKey()).checkInputHolder(holder))
-                    getHandler(set.getKey()).giveCurrency(holder, set.getValue());
+                   getHandler(set.getKey()).giveCurrency(holder, set.getValue());
     }
     
     /**
      * Check if a holder has enough currencies.
-     * If a currency is not compatible with the provided holder type, it will be ignored!
      * 
-     * @param holder
-     *            the holder
-     * @param s
-     *            the currencies
-     * @return true if the player has the currencies, false if not
+     * @param holder the holder of the currencies
+     * @param input the currencies
+     * @return true if the player has the currencies, false if not or if one input value is not useable by the handler
      */
-    public static <T> boolean hasCurrencies(T holder, Map<String, Object> s)
+    public static boolean hasCurrencies(Object holder, Map<String, Object> input)
     {
-        for (Entry<String, Object> set : s.entrySet())
+        for (Entry<String, Object> set : input.entrySet())
             if (hasHandler(set.getKey()))
-                if (getHandler(set.getKey()).checkInputObject(set.getValue()) && getHandler(set.getKey()).checkInputHolder(holder))
                     if (!getHandler(set.getKey()).hasCurrency(holder, set.getValue()))
                         return false;
         
         return true;
     }
     
-    public static <T> boolean isApplicable(T holder, Map<String, Object> s)
+    /**
+     * Check if the given parameters are applicable to the handlers
+     * 
+     * @param holder the holder of the currencies
+     * @param input the currencies
+     * @return true of the input can be handled by every requested handler
+     */
+    public static boolean isApplicable(Object holder, Map<String, Object> input)
     {
-        for(Entry<String, Object> set : s.entrySet())
-            if(hasHandler(set.getKey()))
-                if(!getHandler(set.getKey()).checkInputHolder(holder) || !getHandler(set.getKey()).checkInputObject(s))
+        for (Entry<String, Object> set : input.entrySet())
+            if (hasHandler(set.getKey()))
+                if (!getHandler(set.getKey()).checkInputHolder(holder) || !getHandler(set.getKey()).checkInputObject(input))
                     return false;
         
         return true;
