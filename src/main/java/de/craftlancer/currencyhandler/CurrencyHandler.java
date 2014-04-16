@@ -166,7 +166,7 @@ public class CurrencyHandler extends JavaPlugin
     {
         for (Entry<String, Object> set : input.entrySet())
             if (hasHandler(set.getKey()))
-                   getHandler(set.getKey()).giveCurrency(holder, set.getValue());
+                getHandler(set.getKey()).giveCurrency(holder, set.getValue());
     }
     
     /**
@@ -180,8 +180,8 @@ public class CurrencyHandler extends JavaPlugin
     {
         for (Entry<String, Object> set : input.entrySet())
             if (hasHandler(set.getKey()))
-                    if (!getHandler(set.getKey()).hasCurrency(holder, set.getValue()))
-                        return false;
+                if (!getHandler(set.getKey()).hasCurrency(holder, set.getValue()))
+                    return false;
         
         return true;
     }
