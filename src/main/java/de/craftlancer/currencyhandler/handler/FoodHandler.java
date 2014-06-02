@@ -129,6 +129,13 @@ public class FoodHandler implements Handler
         if (obj instanceof UUID)
             return Bukkit.getPlayer(((UUID) obj));
         
-        return Bukkit.getPlayer(obj.toString());
+        try
+        {
+            return Bukkit.getPlayer(UUID.fromString(obj.toString()));
+        }
+        catch (IllegalArgumentException e)
+        {
+            return Bukkit.getPlayer(obj.toString());
+        }
     }
 }

@@ -106,15 +106,22 @@ public class HealthHandler implements Handler
     
     @SuppressWarnings("deprecation")
     @Override
-    public LivingEntity convertInputHolder(Object obj)
+    public Player convertInputHolder(Object obj)
     {
-        if (obj instanceof LivingEntity)
+        if (obj instanceof Player)
             return (Player) obj;
         
         if (obj instanceof UUID)
             return Bukkit.getPlayer(((UUID) obj));
         
-        return Bukkit.getPlayer(obj.toString());
+        try
+        {
+            return Bukkit.getPlayer(UUID.fromString(obj.toString()));
+        }
+        catch (IllegalArgumentException e)
+        {
+            return Bukkit.getPlayer(obj.toString());
+        }
     }
 
     @Override

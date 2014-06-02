@@ -2,8 +2,11 @@ package de.craftlancer.currencyhandler.handler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -215,6 +218,7 @@ public class ItemHandler implements Handler
         return null;
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public Inventory convertInputHolder(Object obj)
     {
@@ -223,7 +227,24 @@ public class ItemHandler implements Handler
         
         if (obj instanceof InventoryHolder)
             return ((InventoryHolder) obj).getInventory();
+            
+        Player player = null;
+        if (obj instanceof UUID)
+        {
+            player = Bukkit.getPlayer(((UUID) obj));
+        }
+        else
+        {
+            try
+            {
+                player = Bukkit.getPlayer(UUID.fromString(obj.toString()));
+            }
+            catch (IllegalArgumentException e)
+            {
+                player = Bukkit.getPlayer(obj.toString());
+            }
+        }
         
-        return null;
+        return player == null ? null : player.getInventory();
     }
 }

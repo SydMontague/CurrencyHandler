@@ -25,7 +25,7 @@ public class MoneyHandler implements Handler
     {
         Number number = convertInputObject(amount);
         OfflinePlayer player = convertInputHolder(holder);
-
+        
         if (number == null)
             return false;
         
@@ -40,7 +40,7 @@ public class MoneyHandler implements Handler
     {
         Number number = convertInputObject(amount);
         OfflinePlayer player = convertInputHolder(holder);
-
+        
         if (number == null)
             return;
         
@@ -55,7 +55,7 @@ public class MoneyHandler implements Handler
     {
         Number number = convertInputObject(amount);
         OfflinePlayer player = convertInputHolder(holder);
-
+        
         if (number == null)
             return;
         
@@ -70,13 +70,13 @@ public class MoneyHandler implements Handler
     {
         Number number = convertInputObject(amount);
         OfflinePlayer player = convertInputHolder(holder);
-
+        
         if (number == null)
             return;
         
         if (player == null)
             return;
-                
+        
         double diff = number.doubleValue() - economy.getBalance(player);
         if (diff < 0)
             economy.withdrawPlayer(player, -diff);
@@ -110,7 +110,7 @@ public class MoneyHandler implements Handler
     {
         return convertInputObject(obj) != null;
     }
-
+    
     @Override
     public Number convertInputObject(Object obj)
     {
@@ -126,17 +126,24 @@ public class MoneyHandler implements Handler
             return null;
         }
     }
-
+    
     @SuppressWarnings("deprecation")
     @Override
     public OfflinePlayer convertInputHolder(Object obj)
     {
         if (obj instanceof OfflinePlayer)
             return (OfflinePlayer) obj;
-                
+        
         if (obj instanceof UUID)
             return Bukkit.getOfflinePlayer(((UUID) obj));
         
-        return Bukkit.getOfflinePlayer(obj.toString());
+        try
+        {
+            return Bukkit.getOfflinePlayer(UUID.fromString(obj.toString()));
+        }
+        catch (IllegalArgumentException e)
+        {
+            return Bukkit.getOfflinePlayer(obj.toString());
+        }
     }
 }
