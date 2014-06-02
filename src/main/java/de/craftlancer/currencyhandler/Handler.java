@@ -73,4 +73,22 @@ public interface Handler
      * @return true if the object can be used as holder by this handler, false if not
      */
     public abstract boolean checkInputHolder(Object obj);
+    
+    /**
+     * Convert the given Object into a usable format as amount.
+     * The return value CAN be null.
+     * 
+     * @param obj
+     * @return an Object, usable by other methods of the Handler, null if the input is invalid.
+     */
+    public abstract Object convertInputObject(Object obj);
+    
+    /**
+     * Convert the given Object into a usable format as holder.
+     * The return value CAN be null.
+     * 
+     * @param obj
+     * @return an Object, usable by other methods of the Handler, null if the input is invalid.
+     */
+    public abstract Object convertInputHolder(Object obj);
 }

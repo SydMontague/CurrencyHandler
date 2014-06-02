@@ -1,6 +1,10 @@
 package de.craftlancer.currencyhandler.handler;
 
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 import de.craftlancer.currencyhandler.Handler;
 
@@ -16,51 +20,61 @@ public class HealthHandler implements Handler
     @Override
     public boolean hasCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        LivingEntity entity = convertInputHolder(holder);
+        Number number = convertInputObject(amount);
+        
+        if (entity == null)
             return false;
         
-        if (!checkInputObject(amount))
+        if (number == null)
             return false;
         
-        return ((LivingEntity) holder).getHealth() >= ((Number) amount).doubleValue();
+        return entity.getHealth() >= number.doubleValue();
     }
     
     @Override
     public void withdrawCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        LivingEntity entity = convertInputHolder(holder);
+        Number number = convertInputObject(amount);
+        
+        if (entity == null)
             return;
         
-        if (!checkInputObject(amount))
+        if (number == null)
             return;
         
-        LivingEntity entity = (LivingEntity) holder;
-        entity.setHealth(entity.getHealth() - ((Number) amount).doubleValue());
+        entity.setHealth(entity.getHealth() - number.doubleValue());
     }
     
     @Override
     public void giveCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        LivingEntity entity = convertInputHolder(holder);
+        Number number = convertInputObject(amount);
+        
+        if (entity == null)
             return;
         
-        if (!checkInputObject(amount))
+        if (number == null)
             return;
         
-        LivingEntity entity = (LivingEntity) holder;
-        entity.setHealth(entity.getHealth() + ((Number) amount).doubleValue());
+        entity.setHealth(entity.getHealth() + number.doubleValue());
     }
     
     @Override
     public void setCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        LivingEntity entity = convertInputHolder(holder);
+        Number number = convertInputObject(amount);
+        
+        if (entity == null)
             return;
         
-        if (!checkInputObject(amount))
+        if (number == null)
             return;
         
-        ((LivingEntity) holder).setHealth(((Number) amount).doubleValue());
+        entity.setHealth(number.doubleValue());
     }
     
     @Override
@@ -81,12 +95,41 @@ public class HealthHandler implements Handler
     @Override
     public boolean checkInputObject(Object obj)
     {
-        return obj instanceof Number;
+        return convertInputObject(obj) != null;
     }
     
     @Override
     public boolean checkInputHolder(Object obj)
     {
-        return obj instanceof LivingEntity;
+        return convertInputHolder(obj) != null;
+    }
+    
+    @SuppressWarnings("deprecation")
+    @Override
+    public LivingEntity convertInputHolder(Object obj)
+    {
+        if (obj instanceof LivingEntity)
+            return (Player) obj;
+        
+        if (obj instanceof UUID)
+            return Bukkit.getPlayer(((UUID) obj));
+        
+        return Bukkit.getPlayer(obj.toString());
+    }
+
+    @Override
+    public Number convertInputObject(Object obj)
+    {
+        if (obj instanceof Number)
+            return (Number) obj;
+        
+        try
+        {
+            return Double.parseDouble(obj.toString());
+        }
+        catch (NumberFormatException e)
+        {
+            return null;
+        }
     }
 }

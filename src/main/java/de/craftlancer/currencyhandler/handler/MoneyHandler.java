@@ -1,8 +1,11 @@
 package de.craftlancer.currencyhandler.handler;
 
+import java.util.UUID;
+
 import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.entity.HumanEntity;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import de.craftlancer.currencyhandler.Handler;
 
@@ -20,54 +23,65 @@ public class MoneyHandler implements Handler
     @Override
     public boolean hasCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        Number number = convertInputObject(amount);
+        OfflinePlayer player = convertInputHolder(holder);
+
+        if (number == null)
             return false;
         
-        if (!checkInputObject(amount))
+        if (player == null)
             return false;
         
-        return economy.has(getAccountName(holder), ((Number) amount).doubleValue());
+        return economy.has(player, number.doubleValue());
     }
     
     @Override
     public void withdrawCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        Number number = convertInputObject(amount);
+        OfflinePlayer player = convertInputHolder(holder);
+
+        if (number == null)
             return;
         
-        if (!checkInputObject(amount))
+        if (player == null)
             return;
         
-        economy.withdrawPlayer(getAccountName(holder), ((Number) amount).doubleValue());
+        economy.withdrawPlayer(player, number.doubleValue());
     }
     
     @Override
     public void giveCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        Number number = convertInputObject(amount);
+        OfflinePlayer player = convertInputHolder(holder);
+
+        if (number == null)
             return;
         
-        if (!checkInputObject(amount))
+        if (player == null)
             return;
-        economy.depositPlayer(getAccountName(holder), ((Number) amount).doubleValue());
+        
+        economy.depositPlayer(player, number.doubleValue());
     }
     
     @Override
     public void setCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        Number number = convertInputObject(amount);
+        OfflinePlayer player = convertInputHolder(holder);
+
+        if (number == null)
             return;
         
-        if (!checkInputObject(amount))
+        if (player == null)
             return;
-        
-        String name = getAccountName(holder);
-        
-        double diff = ((Number) amount).doubleValue() - economy.getBalance(name);
+                
+        double diff = number.doubleValue() - economy.getBalance(player);
         if (diff < 0)
-            economy.withdrawPlayer(name, -diff);
+            economy.withdrawPlayer(player, -diff);
         else
-            economy.depositPlayer(name, diff);
+            economy.depositPlayer(player, diff);
     }
     
     @Override
@@ -88,23 +102,41 @@ public class MoneyHandler implements Handler
     @Override
     public boolean checkInputObject(Object obj)
     {
-        
-        return obj instanceof Number;
-    }
-    
-    private static String getAccountName(Object obj)
-    {
-        String name = obj.toString();
-        
-        if (obj instanceof HumanEntity)
-            name = ((HumanEntity) obj).getName();
-        
-        return name;
+        return convertInputObject(obj) != null;
     }
     
     @Override
     public boolean checkInputHolder(Object obj)
     {
-        return economy.hasAccount(getAccountName(obj));
+        return convertInputObject(obj) != null;
+    }
+
+    @Override
+    public Number convertInputObject(Object obj)
+    {
+        if (obj instanceof Number)
+            return (Number) obj;
+        
+        try
+        {
+            return Integer.parseInt(obj.toString());
+        }
+        catch (NumberFormatException e)
+        {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public OfflinePlayer convertInputHolder(Object obj)
+    {
+        if (obj instanceof OfflinePlayer)
+            return (OfflinePlayer) obj;
+                
+        if (obj instanceof UUID)
+            return Bukkit.getOfflinePlayer(((UUID) obj));
+        
+        return Bukkit.getOfflinePlayer(obj.toString());
     }
 }

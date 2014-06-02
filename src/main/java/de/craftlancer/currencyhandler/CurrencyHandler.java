@@ -120,6 +120,39 @@ public class CurrencyHandler extends JavaPlugin
     }
     
     /**
+     * Convert the given, mutable, HashMap to a Handler friendly HashMap.
+     * The given map will be modified and executed 1 tick after the method was called
+     * to make sure every handler has been loaded, when called on startup.
+     * 
+     * @param map a mutable map
+     */
+    public static void convertCurrencies(final HashMap<String, Object> map)
+    {
+        new BukkitRunnable()
+        {
+            @Override
+            public void run()
+            {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> output = (Map<String, Object>) map.clone();
+                
+                for (Entry<String, Object> entry : output.entrySet())
+                {
+                    if (!hasHandler(entry.getKey()))
+                        continue;
+                    
+                    Object value = getHandler(entry.getKey()).convertInputObject(entry.getValue());
+                    
+                    if (value == null)
+                        continue;
+                    
+                    map.put(entry.getKey(), value);
+                }
+            }
+        }.runTaskLater(getInstance(), 0);
+    }
+    
+    /**
      * Get a registered Handler with a given key.
      * 
      * @param key the key of the handler

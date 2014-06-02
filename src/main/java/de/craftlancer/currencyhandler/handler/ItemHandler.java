@@ -1,5 +1,6 @@
 package de.craftlancer.currencyhandler.handler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -16,47 +17,52 @@ public class ItemHandler implements Handler
     @Override
     public boolean hasCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        List<ItemStack> list = convertInputObject(amount);
+        Inventory inventory = convertInputHolder(holder);
+        
+        if (list == null)
             return false;
         
-        if (!checkInputObject(amount))
+        if (inventory == null)
             return false;
-        
-        Inventory inventory = getInventory(holder);
-        
-        for (Object obj : (List<?>) amount)
-        {
-            ItemStack item = getItemStack(obj);
+                
+        for (ItemStack item : list)
             if (!inventory.containsAtLeast(item, item.getAmount()))
                 return false;
-        }
+
         return true;
     }
     
     @Override
     public void withdrawCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        List<ItemStack> list = convertInputObject(amount);
+        Inventory inventory = convertInputHolder(holder);
+        
+        if (list == null)
             return;
         
-        if (!checkInputObject(amount))
+        if (inventory == null)
             return;
-        Inventory inventory = getInventory(holder);
-        for (Object obj : (List<?>) amount)
-            inventory.removeItem(getItemStack(obj));
+        
+        for (ItemStack item : list)
+            inventory.removeItem(item);
     }
     
     @Override
     public void giveCurrency(Object holder, Object amount)
     {
-        if (!checkInputHolder(holder))
+        List<ItemStack> list = convertInputObject(amount);
+        Inventory inventory = convertInputHolder(holder);
+        
+        if (list == null)
             return;
         
-        if (!checkInputObject(amount))
+        if (inventory == null)
             return;
-        Inventory inventory = getInventory(holder);
-        for (Object obj : (List<?>) amount)
-            inventory.addItem(getItemStack(obj));
+        
+        for (ItemStack item : list)
+            inventory.addItem(item);
     }
     
     @Override
@@ -68,12 +74,14 @@ public class ItemHandler implements Handler
     @Override
     public String getFormatedString(Object value)
     {
-        if (!checkInputObject(value))
+        List<ItemStack> list = convertInputObject(value);
+        
+        if (list == null)
             return "INVALID INPUT OBJECT";
         
         StringBuilder output = new StringBuilder();
         
-        for (Object obj : (List<?>) value)
+        for (ItemStack obj : list)
             output.append(getItemString(obj)).append(" ");
         
         if (output.length() > 0)
@@ -91,30 +99,13 @@ public class ItemHandler implements Handler
     @Override
     public boolean checkInputObject(Object obj)
     {
-        if (!(obj instanceof List<?>))
-            return false;
-        
-        for (Object element : (List<?>) obj)
-            if (isItemStack(element))
-                return false;
-        
-        return true;
-    }
-    
-    private static Inventory getInventory(Object obj)
-    {
-        if (obj instanceof Inventory)
-            return (Inventory) obj;
-        if (obj instanceof InventoryHolder)
-            return ((InventoryHolder) obj).getInventory();
-        
-        return null;
+        return convertInputObject(obj) != null;
     }
     
     @Override
     public boolean checkInputHolder(Object obj)
     {
-        return getInventory(obj) != null;
+        return convertInputHolder(obj) != null;
     }
     
     private static String getItemString(Object obj)
@@ -196,5 +187,43 @@ public class ItemHandler implements Handler
             return false;
         
         return true;
+    }
+    
+    @Override
+    public List<ItemStack> convertInputObject(Object obj)
+    {
+        if (obj instanceof List<?>)
+        {
+            List<ItemStack> i = new ArrayList<ItemStack>();
+            
+            for (Object o : (List<?>) obj)
+            {
+                if (!isItemStack(obj))
+                    continue;
+                
+                i.add(getItemStack(o));
+            }
+        }
+        
+        if (isItemStack(obj))
+        {
+            List<ItemStack> i = new ArrayList<ItemStack>();
+            i.add(getItemStack(obj));
+            return i;
+        }
+        
+        return null;
+    }
+    
+    @Override
+    public Inventory convertInputHolder(Object obj)
+    {
+        if (obj instanceof Inventory)
+            return (Inventory) obj;
+        
+        if (obj instanceof InventoryHolder)
+            return ((InventoryHolder) obj).getInventory();
+        
+        return null;
     }
 }
