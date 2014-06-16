@@ -3,8 +3,7 @@ package de.craftlancer.currencyhandler.handler;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Damageable;
 
 import de.craftlancer.currencyhandler.Handler;
 
@@ -20,7 +19,7 @@ public class HealthHandler implements Handler
     @Override
     public boolean hasCurrency(Object holder, Object amount)
     {
-        LivingEntity entity = convertInputHolder(holder);
+        Damageable entity = convertInputHolder(holder);
         Number number = convertInputObject(amount);
         
         if (entity == null)
@@ -35,7 +34,7 @@ public class HealthHandler implements Handler
     @Override
     public void withdrawCurrency(Object holder, Object amount)
     {
-        LivingEntity entity = convertInputHolder(holder);
+        Damageable entity = convertInputHolder(holder);
         Number number = convertInputObject(amount);
         
         if (entity == null)
@@ -50,7 +49,7 @@ public class HealthHandler implements Handler
     @Override
     public void giveCurrency(Object holder, Object amount)
     {
-        LivingEntity entity = convertInputHolder(holder);
+        Damageable entity = convertInputHolder(holder);
         Number number = convertInputObject(amount);
         
         if (entity == null)
@@ -65,7 +64,7 @@ public class HealthHandler implements Handler
     @Override
     public void setCurrency(Object holder, Object amount)
     {
-        LivingEntity entity = convertInputHolder(holder);
+        Damageable entity = convertInputHolder(holder);
         Number number = convertInputObject(amount);
         
         if (entity == null)
@@ -106,10 +105,10 @@ public class HealthHandler implements Handler
     
     @SuppressWarnings("deprecation")
     @Override
-    public Player convertInputHolder(Object obj)
+    public Damageable convertInputHolder(Object obj)
     {
-        if (obj instanceof Player)
-            return (Player) obj;
+        if (obj instanceof Damageable)
+            return (Damageable) obj;
         
         if (obj instanceof UUID)
             return Bukkit.getPlayer(((UUID) obj));
