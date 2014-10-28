@@ -78,7 +78,7 @@ public interface Handler
      * Convert the given Object into a usable format as amount.
      * The return value CAN be null.
      * 
-     * @param obj
+     * @param obj the object that needs to be converted
      * @return an Object, usable by other methods of the Handler, null if the input is invalid.
      */
     public abstract Object convertInputObject(Object obj);
@@ -87,7 +87,7 @@ public interface Handler
      * Convert the given Object into a usable format as holder.
      * The return value CAN be null.
      * 
-     * @param obj
+     * @param obj the object that needs to be converted
      * @return an Object, usable by other methods of the Handler, null if the input is invalid.
      */
     public abstract Object convertInputHolder(Object obj);
